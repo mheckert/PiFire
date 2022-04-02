@@ -39,6 +39,8 @@ else:
 
 if(settings['modules']['adc'] == 'ads1115'):
 	from adc_ads1115 import ReadADC # Library for reading the ADC device
+elif(settings['modules']['adc'] == 'max31855'):
+	from adc_max31855 import ReadADC # Class for reading max31855 device
 else: 
 	from adc_prototype import ReadADC # Simulated Library for reading the ADC device
 	
@@ -318,6 +320,7 @@ def WorkCycle(mode, grill_platform, adc_device, display_device, dist_device):
 				OnTime = settings['cycle_data']['HoldCycleTime'] * CycleRatio
 				OffTime = settings['cycle_data']['HoldCycleTime'] * (1 - CycleRatio)
 				CycleTime = OnTime + OffTime
+				WriteLog( "P={} I={} D={}".format( PIDControl.P, PIDControl.I,  PIDControl.D ) )
 				if(settings['globals']['debug_mode'] == True):
 					event = '* On Time = ' + str(OnTime) + ', OffTime = ' + str(OffTime) + ', CycleTime = ' + str(CycleTime) + ', CycleRatio = ' + str(CycleRatio)
 					print(event)

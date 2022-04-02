@@ -12,6 +12,8 @@
 # Imported Libraries
 # *****************************************
 
+import subprocess
+import sys
 class Display:
 
 	def __init__(self, units='F'):
@@ -21,6 +23,7 @@ class Display:
 	def DisplayStatus(self, in_data, status_data):
 		units = status_data['units']
 		print('====[Display]=====')
+		print( subprocess.run("date",capture_output=True).stdout )
 		print('* Grill Temp: ' + str(in_data['GrillTemp'])[:5] + units)
 		print('* Grill SetPoint: ' + str(in_data['GrillSetPoint']) + units)
 		print('* Probe1 Temp: ' + str(in_data['Probe1Temp'])[:5] + units)
@@ -36,8 +39,11 @@ class Display:
 			print('* Notifications: True')
 		for item in status_data['outpins']:
 			if status_data['outpins'][item] == 0:
-				print('* ' + str(item) + ' ON')
+				print('* ' + str(item) + ': ON')
+			else:
+				print('* ' + str(item) + ': OFF')
 		print('==================')
+		sys.stdout.flush()
 
 	def DisplaySplash(self):
 		print('  (        (')

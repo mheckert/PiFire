@@ -9,8 +9,6 @@ docs/restricted/
 
 local/
 
-settings.json
-
 templates/backups/
 
 test-startup.json

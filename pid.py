@@ -43,9 +43,10 @@ class PID:
 
 		self.Derv = 0.0
 		self.Inter = 0.0
-		self.Inter_max = abs(self.Center/self.Ki)
+		self.Inter_max = abs(0.2/self.Ki)
 
 		self.Last = 150
+		self.Last_valid = False
 
 		self.setTarget(0.0)
 
@@ -69,7 +70,11 @@ class PID:
 		self.I = self.Ki * self.Inter
 
 		#D
-		self.Derv = (Current - self.Last)/dT
+		if( self.Last_valid ):
+			self.Derv = (Current - self.Last)/dT
+		else:
+			self.Last = Current
+			self.Last_valid = True
 		self.D = self.Kd * self.Derv
 
 		#PID
@@ -87,6 +92,7 @@ class PID:
 		self.error = 0.0
 		self.Inter = 0.0
 		self.Derv = 0.0
+		self.Last_valid = False
 		self.LastUpdate = time.time()
 
 	def setGains(self, PB, Ti, Td):

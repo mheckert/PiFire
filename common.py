@@ -141,7 +141,7 @@ def DefaultSettings():
 	if isRaspberryPi():
 		settings['modules'] = {
 			'grillplat' : 'pifire',	 	# Grill Platform (PiFire - Raspberry Pi GPIOs)
-			'adc' : 'ads1115',			# Analog to Digital Converter Default is the ADS1115
+			'adc' : 'max31855',			# Analog to Digital Converter Default is the ADS1115
 			'display' : 'ssd1306',		# Default display is the SSD1306
 			'dist' : 'prototype'		# Default distance sensor is none
 		}
