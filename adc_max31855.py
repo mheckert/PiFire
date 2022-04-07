@@ -6,6 +6,15 @@ class ReadADC:
         pass
 
     def ReadAllPorts(self):
+        retries = 10
+        while retries > 0:
+            ret = self._ReadAllPorts()
+            if( ret ):
+                return ret
+            else:
+                retries -= 1
+
+    def _ReadAllPorts(self):
         child = subprocess.run("/home/pi/git/max31855/readtemp", capture_output=True)
         if( child.returncode ):
             now = str(datetime.datetime.now())
