@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import subprocess
+import datetime
 class ReadADC:
     def __init__(self, *args, **kwargs):
         pass

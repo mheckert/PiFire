@@ -183,7 +183,10 @@ def WorkCycle(mode, grill_platform, adc_device, display_device, dist_device):
 	adc_device.SetProfiles(settings['probe_settings']['probe_profiles'][grill0type], settings['probe_settings']['probe_profiles'][probe1type], settings['probe_settings']['probe_profiles'][probe2type])
 	
 	adc_data = {}
-	adc_data = adc_device.ReadAllPorts()
+	while( not adc_data ):
+		adc_data = adc_device.ReadAllPorts()
+		if( adc_data is None ):
+			WriteLog("Probe read error")
 
 	AvgGT.enqueue(adc_data['GrillTemp'])
 	AvgP1.enqueue(adc_data['Probe1Temp'])
@@ -354,7 +357,8 @@ def WorkCycle(mode, grill_platform, adc_device, display_device, dist_device):
 
 		# Get temperatures from all probes
 		adc_data = {}
-		adc_data = adc_device.ReadAllPorts()
+		while( not adc_data ):
+			adc_data = adc_device.ReadAllPorts()
 
 		# Test temperature data returned for errors (+/- 20% Temp Variance), and average the data since last reading
 		AvgGT.enqueue(adc_data['GrillTemp'])
@@ -528,7 +532,10 @@ def Monitor(grill_platform, adc_device, display_device, dist_device):
 	adc_device.SetProfiles(settings['probe_settings']['probe_profiles'][grill0type], settings['probe_settings']['probe_profiles'][probe1type], settings['probe_settings']['probe_profiles'][probe2type])
 
 	adc_data = {}
-	adc_data = adc_device.ReadAllPorts()
+	while( not adc_data ):
+		adc_data = adc_device.ReadAllPorts()
+		if( adc_data is None ):
+			WriteLog("Probe read error")
 
 	AvgGT.enqueue(adc_data['GrillTemp'])
 	AvgP1.enqueue(adc_data['Probe1Temp'])
@@ -615,7 +622,10 @@ def Monitor(grill_platform, adc_device, display_device, dist_device):
 			adc_device.SetProfiles(settings['probe_settings']['probe_profiles'][grill0type], settings['probe_settings']['probe_profiles'][probe1type], settings['probe_settings']['probe_profiles'][probe2type])
 
 		adc_data = {}
-		adc_data = adc_device.ReadAllPorts()
+		while( not adc_data ):
+			adc_data = adc_device.ReadAllPorts()
+			if( adc_data is None ):
+				WriteLog("Probe read error")
 
 		# Test temperature data returned for errors (+/- 20% Temp Variance), and average the data since last reading
 		AvgGT.enqueue(adc_data['GrillTemp'])
@@ -705,7 +715,10 @@ def Manual_Mode(grill_platform, adc_device, display_device, dist_device):
 	adc_device.SetProfiles(settings['probe_settings']['probe_profiles'][grill0type], settings['probe_settings']['probe_profiles'][probe1type], settings['probe_settings']['probe_profiles'][probe2type])
 
 	adc_data = {}
-	adc_data = adc_device.ReadAllPorts()
+	while( not adc_data ):
+		adc_data = adc_device.ReadAllPorts()
+		if( adc_data is None ):
+			WriteLog("Probe read error")
 
 	AvgGT.enqueue(adc_data['GrillTemp'])
 	AvgP1.enqueue(adc_data['Probe1Temp'])
@@ -791,7 +804,11 @@ def Manual_Mode(grill_platform, adc_device, display_device, dist_device):
 			adc_device.SetProfiles(settings['probe_settings']['probe_profiles'][grill0type], settings['probe_settings']['probe_profiles'][probe1type], settings['probe_settings']['probe_profiles'][probe2type])
 
 		adc_data = {}
-		adc_data = adc_device.ReadAllPorts()
+		while( not adc_data ):
+			adc_data = adc_device.ReadAllPorts()
+			if( adc_data is None ):
+				WriteLog("Probe read error")
+
 
 		# Test temperature data returned for errors (+/- 20% Temp Variance), and average the data since last reading
 		AvgGT.enqueue(adc_data['GrillTemp'])
@@ -1055,8 +1072,8 @@ def SendFirebaseNotification(notifyevent, control, settings, pelletdb):
 	device_uuid = settings['firebase']['uuid']
 
 	headers = {
-        'Content-Type': 'application/json'
-      }
+		'Content-Type': 'application/json'
+	  }
 
 	body = {
 		'uuid': device_uuid,
