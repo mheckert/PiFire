@@ -21,7 +21,7 @@
     "four_probes": false,
     "grill_name": "",
     "page_theme": "light",
-    "shutdown_timer": 300,
+    "shutdown_timer": 600,
     "triggerlevel": "LOW",
     "units": "F"
   },
