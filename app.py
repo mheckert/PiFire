@@ -636,6 +636,11 @@ def pelletsspage(action=None):
 
 	return render_template('pellets.html', alert=event, pelletdb=pelletdb, page_theme=settings['globals']['page_theme'], grill_name=settings['globals']['grill_name'])
 
+@app.route('/garrett', methods=['POST','GET'])
+def garrettspage(action=None):
+	global settings
+
+	return render_template('garrett.html', page_theme=settings['globals']['page_theme'], grill_name=settings['globals']['grill_name'])
 
 @app.route('/recipes', methods=['POST','GET'])
 def recipespage(action=None):
