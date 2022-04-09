@@ -61,11 +61,12 @@ class PID:
 		self.P = self.Kp*error + self.Center #P = 1 for PB/2 under setPoint, P = 0 for PB/2 over setPoint
 
 		#I
-		dT = time.time() - self.LastUpdate
-		#if self.P > 0 and self.P < 1: #Ensure we are in the PB, otherwise do not calculate I to avoid windup
-		self.Inter += error*dT
-		self.Inter = max(self.Inter, -self.Inter_max)
-		self.Inter = min(self.Inter, self.Inter_max)
+		if( self.Last_valid ):
+			dT = time.time() - self.LastUpdate
+			#if self.P > 0 and self.P < 1: #Ensure we are in the PB, otherwise do not calculate I to avoid windup
+			self.Inter += error*dT
+			self.Inter = max(self.Inter, -self.Inter_max)
+			self.Inter = min(self.Inter, self.Inter_max)
 
 		self.I = self.Ki * self.Inter
 

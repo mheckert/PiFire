@@ -165,6 +165,7 @@ def DefaultControl():
 	control['updated'] = True
 
 	control['mode'] = 'Stop'
+	control['pause_pid'] = False # Do not update pid ( useful for cooling )
 
 	settings = ReadSettings()
 
