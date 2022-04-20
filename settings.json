@@ -3,12 +3,14 @@
     "HoldCycleTime": 20,
     "PB": 120.0,
     "PMode": 2,
+    "StartupOnTime": 15,
+    "StartupOffTime": 300,
     "SmokeCycleTime": 15,
     "Td": 45.0,
     "Ti": 180.0,
     "center": 0.0,
     "u_max": 1.0,
-    "u_min": 0.05
+    "u_min": 0.01
   },
   "firebase": {
     "ServerUrl": "",
