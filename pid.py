@@ -67,9 +67,9 @@ class PID:
 			if( abs(self.error) > 5 ):
 				self.Inter = 0 # Reset integrator unless within the fine-tune band
 			else:
-			self.Inter += error*dT
-			self.Inter = max(self.Inter, -self.Inter_max)
-			self.Inter = min(self.Inter, self.Inter_max)
+				self.Inter += error*dT
+				self.Inter = max(self.Inter, -self.Inter_max)
+				self.Inter = min(self.Inter, self.Inter_max)
 
 		self.I = self.Ki * self.Inter
 
