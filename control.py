@@ -144,7 +144,13 @@ def WorkCycle(mode, grill_platform, adc_device, display_device, dist_device):
 			print(event)
 			WriteLog(event)
 
-	if (mode == 'Startup' or 'Smoke' or 'Reignite'):
+	if (mode == 'Startup' ):
+		OnTime = settings['cycle_data']['StartupOnTime'] #  Auger On Time (Default 15s)
+		OffTime = settings['cycle_data']['StartupOffTime'] #  Auger Off Time
+		CycleTime = OnTime + OffTime    #  Total Cycle Time
+		CycleRatio = OnTime / CycleTime #  Ratio of OnTime to CycleTime
+
+	if (mode in [ 'Smoke', 'Reignite'] ):
 		OnTime = settings['cycle_data']['SmokeCycleTime'] #  Auger On Time (Default 15s)
 		OffTime = 45 + (settings['cycle_data']['PMode'] * 10) 	#  Auger Off Time
 		CycleTime = OnTime + OffTime 	#  Total Cycle Time

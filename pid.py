@@ -43,7 +43,7 @@ class PID:
 
 		self.Derv = 0.0
 		self.Inter = 0.0
-		self.Inter_max = abs(0.2/self.Ki)
+		self.Inter_max = .02
 
 		self.Last = 150
 		self.Last_valid = False
@@ -64,6 +64,9 @@ class PID:
 		if( self.Last_valid ):
 			dT = time.time() - self.LastUpdate
 			#if self.P > 0 and self.P < 1: #Ensure we are in the PB, otherwise do not calculate I to avoid windup
+			if( abs(self.error) > 5 ):
+				self.Inter = 0 # Reset integrator unless within the fine-tune band
+			else:
 			self.Inter += error*dT
 			self.Inter = max(self.Inter, -self.Inter_max)
 			self.Inter = min(self.Inter, self.Inter_max)
@@ -98,7 +101,7 @@ class PID:
 
 	def setGains(self, PB, Ti, Td):
 		self.CalculateGains(PB,Ti,Td)
-		self.Inter_max = abs(self.Center/self.Ki)
+		self.Inter_max = .02
 
 	def getK(self):
 		return self.Kp, self.Ki, self.Kd
