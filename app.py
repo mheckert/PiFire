@@ -159,12 +159,6 @@ def dash(action=None):
 				else: 
 					control['s_plus'] = False 
 				WriteControl(control)
-		if('setpause_pid' in response):
-			if(response['setpause_pid']=='true'):
-				control['pause_pid'] = True
-			else:
-				control['pause_pid'] = False
-			WriteControl(control)
 		if('setmodestartup' in response):
 			if(response['setmodestartup']=='true'):
 				control['updated'] = True
@@ -217,7 +211,7 @@ def dashdata(action=None):
 	cur_probe_temps = []
 	cur_probe_temps = ReadCurrent()
 
-	return jsonify({ 'cur_probe_temps' : cur_probe_temps, 'probes_enabled' : probes_enabled, 'current_mode' : control['mode'], 'set_points' : control['setpoints'], 'notify_req' : control['notify_req'], 'pause_pid' : control['pause_pid'], 'splus' : control['s_plus'] })
+	return jsonify({ 'cur_probe_temps' : cur_probe_temps, 'probes_enabled' : probes_enabled, 'current_mode' : control['mode'], 'set_points' : control['setpoints'], 'notify_req' : control['notify_req'], 'splus' : control['s_plus'] })
 
 @app.route('/hopperlevel')
 def hopper_level(action=None):
@@ -1901,12 +1895,6 @@ def update_control(json_data):
 				else: 
 					control['s_plus'] = False 
 				WriteControl(control)
-		if('setpause_pid' in data['setmode']):
-			if(data['setmode']['setpause_pid']=='true'):
-				control['pause_pid'] = True
-			else:
-				control['pause_pid'] = False
-			WriteControl(control)
 		if('setmodestartup' in data['setmode']):
 			if(data['setmode']['setmodestartup']=='true'):
 				control['updated'] = True

@@ -11,7 +11,6 @@ $(document).ready(function(){
         //  data.cur_probe_temps[]
         //  data.probes_enabled[]
         //  data.current_mode
-        //  data.pause_pid
         //  data.notify_req
         //  data.splus
 
@@ -179,16 +178,6 @@ $(document).ready(function(){
             $("#active_group").show();
             $("#stop_btn").hide();
             $("#error_btn").hide();
-
-            // if pause_pid is active, highlight that button
-            if (data.pause_pid) {
-                document.getElementById("pause_btn").value = "false";
-                document.getElementById("pause_btn").className = "btn btn-success border border-secondary";
-                }
-            else {
-                document.getElementById("pause_btn").value = "true";
-                document.getElementById("pause_btn").className = "btn btn-outline-secondary border border-secondary";
-                }
         } else if (data.current_mode == 'Shutdown') {
             document.getElementById("shutdown_btn").className = "btn btn-danger border border-secondary";
             $("#inactive_group").hide();

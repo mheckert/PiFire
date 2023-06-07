@@ -124,8 +124,6 @@ def WorkCycle(mode, grill_platform, adc_device, display_device, dist_device):
 	grill_platform.IgniterOff()
 	grill_platform.AugerOff()
 	grill_platform.PowerOn()
-
-	PIDControl = None
 	
 	if(settings['globals']['debug_mode'] == True):
 		event = '* Fan ON, Igniter OFF, Auger OFF'
@@ -264,8 +262,6 @@ def WorkCycle(mode, grill_platform, adc_device, display_device, dist_device):
 	# Set Hold Mode Target Temp Boolean
 	target_temp_achieved = False
 
-	pause_pid = False
-
 	# ============ Main Work Cycle ============
 	while(status == 'Active'):
 		now = time.time()
@@ -287,17 +283,6 @@ def WorkCycle(mode, grill_platform, adc_device, display_device, dist_device):
 		if (control['updated'] == True):
 			status = 'Inactive'
 			break
-
-		if (control['pause_pid'] != pause_pid):
-			pause_pid = control['pause_pid']
-			if( pause_pid ):
-				grill_platform.FanOff()
-				grill_platform.AugerOff()
-				if( PIDControl ):
-					PIDControl.Last_valid = False
-			else:
-				grill_platform.FanOn()
-			WriteLog( "PID/Fan " + ("Paused" if pause_pid else "Unpaused") )
 
 		# Check hopper level when requested or every 300 seconds 
 		if (control['hopper_check'] == True) or (now - hoppertoggletime > 300):
@@ -328,43 +313,40 @@ def WorkCycle(mode, grill_platform, adc_device, display_device, dist_device):
 				control['status'] = 'active'
 				WriteControl(control)
 				break
+		
+		# Change Auger State based on Cycle Time
+		current_output_status = grill_platform.GetOutputStatus()
 
-		if ( not pause_pid ):
-			#{
-			# Change Auger State based on Cycle Time
-			current_output_status = grill_platform.GetOutputStatus()
-
-			# If Auger is OFF and time since toggle is greater than Off Time
-			if (current_output_status['auger'] == AUGEROFF) and (now - augertoggletime > CycleTime * (1-CycleRatio)):
-				grill_platform.AugerOn()
-				augertoggletime = now
-				# Reset Cycle Time for HOLD Mode
-				if (mode == 'Hold'):
-					CycleRatio = PIDControl.update(AvgGT.average())
-					CycleRatio = max(CycleRatio, settings['cycle_data']['u_min'])
-					CycleRatio = min(CycleRatio, settings['cycle_data']['u_max'])
-					OnTime = settings['cycle_data']['HoldCycleTime'] * CycleRatio
-					OffTime = settings['cycle_data']['HoldCycleTime'] * (1 - CycleRatio)
-					CycleTime = OnTime + OffTime
-                                        WriteLog( "P={} I={} D={} inter={}".format( PIDControl.P, PIDControl.I,  PIDControl.D, PIDControl.Inter ) )
-					if(settings['globals']['debug_mode'] == True):
-						event = '* On Time = ' + str(OnTime) + ', OffTime = ' + str(OffTime) + ', CycleTime = ' + str(CycleTime) + ', CycleRatio = ' + str(CycleRatio)
-						print(event)
-						WriteLog(event)
+		# If Auger is OFF and time since toggle is greater than Off Time
+		if (current_output_status['auger'] == AUGEROFF) and (now - augertoggletime > CycleTime * (1-CycleRatio)):
+			grill_platform.AugerOn()
+			augertoggletime = now
+			# Reset Cycle Time for HOLD Mode
+			if (mode == 'Hold'):
+				CycleRatio = PIDControl.update(AvgGT.average())
+				CycleRatio = max(CycleRatio, settings['cycle_data']['u_min'])
+				CycleRatio = min(CycleRatio, settings['cycle_data']['u_max'])
+				OnTime = settings['cycle_data']['HoldCycleTime'] * CycleRatio
+				OffTime = settings['cycle_data']['HoldCycleTime'] * (1 - CycleRatio)
+				CycleTime = OnTime + OffTime
+					WriteLog( "P={} I={} D={}".format( PIDControl.P, PIDControl.I,  PIDControl.D ) )
 				if(settings['globals']['debug_mode'] == True):
-					event = '* Cycle Event: Auger On'
+					event = '* On Time = ' + str(OnTime) + ', OffTime = ' + str(OffTime) + ', CycleTime = ' + str(CycleTime) + ', CycleRatio = ' + str(CycleRatio)
 					print(event)
 					WriteLog(event)
+			if(settings['globals']['debug_mode'] == True):
+				event = '* Cycle Event: Auger On'
+				print(event)
+				WriteLog(event)
 
-			# If Auger is ON and time since toggle is greater than On Time
-			if (current_output_status['auger'] == AUGERON) and (now - augertoggletime > CycleTime * CycleRatio):
-				grill_platform.AugerOff()
-				augertoggletime = now
-				if(settings['globals']['debug_mode'] == True):
-					event = '* Cycle Event: Auger Off'
-					print(event)
-					WriteLog(event)
-			#}
+		# If Auger is ON and time since toggle is greater than On Time
+		if (current_output_status['auger'] == AUGERON) and (now - augertoggletime > CycleTime * CycleRatio):
+			grill_platform.AugerOff()
+			augertoggletime = now
+			if(settings['globals']['debug_mode'] == True):
+				event = '* Cycle Event: Auger Off'
+				print(event)
+				WriteLog(event)
 
 		# Grab current probe profiles if they have changed since the last loop. 
 		if (control['probe_profile_update'] == True):
@@ -415,7 +397,7 @@ def WorkCycle(mode, grill_platform, adc_device, display_device, dist_device):
 		# Safety Controls
 		if ((mode == 'Startup') or (mode == 'Reignite')):
 			control['safety']['afterstarttemp'] = AvgGT.average()
-		elif (not control['pause_pid'] and ((mode == 'Hold') or (mode == 'Smoke'))):
+		elif ((mode == 'Hold') or (mode == 'Smoke')):
 			if (AvgGT.average() < control['safety']['startuptemp']):
 				if(control['safety']['reigniteretries'] == 0):
 					status = 'Inactive'
