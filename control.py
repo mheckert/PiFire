@@ -346,7 +346,7 @@ def WorkCycle(mode, grill_platform, adc_device, display_device, dist_device):
 					OnTime = settings['cycle_data']['HoldCycleTime'] * CycleRatio
 					OffTime = settings['cycle_data']['HoldCycleTime'] * (1 - CycleRatio)
 					CycleTime = OnTime + OffTime
-					WriteLog( "P={} I={} D={}".format( PIDControl.P, PIDControl.I,  PIDControl.D ) )
+                                        WriteLog( "P={} I={} D={} inter={}".format( PIDControl.P, PIDControl.I,  PIDControl.D, PIDControl.Inter ) )
 					if(settings['globals']['debug_mode'] == True):
 						event = '* On Time = ' + str(OnTime) + ', OffTime = ' + str(OffTime) + ', CycleTime = ' + str(CycleTime) + ', CycleRatio = ' + str(CycleRatio)
 						print(event)
