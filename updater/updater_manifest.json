@@ -1,0 +1,24 @@
+{
+  "dependencies": {
+    "app": {
+      "py_dependencies": [
+        "flask_mobility",
+        "flask_socketio",
+        "flask_qrcode"
+      ],
+      "apt_dependencies": [
+        "python3-scipy"
+      ]
+    },
+    "control": {
+      "py_dependencies": [
+        "apprise",
+        "scikit-fuzzy",
+        "scikit-learn"
+      ],
+      "apt_dependencies": [
+        "libatlas-base-dev"
+      ]
+    }
+  }
+}

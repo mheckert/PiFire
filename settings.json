@@ -1,29 +1,73 @@
 {
+  "controller": {
+    "config": {
+      "fuzzy": {},
+      "ml": {},
+      "pid": {
+        "PB": 120.0,
+        "Td": 45.0,
+        "Ti": 180.0,
+        "center": 0.0
+      }
+    },
+    "selected": "pid"
+  },
   "cycle_data": {
     "HoldCycleTime": 20,
-    "PB": 120.0,
+    "LidOpenDetectEnabled": false,
+    "LidOpenPauseTime": 60,
+    "LidOpenThreshold": 15,
     "PMode": 2,
-    "StartupOnTime": 15,
-    "StartupOffTime": 300,
     "SmokeCycleTime": 15,
-    "Td": 45.0,
-    "Ti": 180.0,
-    "center": 0.0,
     "u_max": 1.0,
     "u_min": 0.01
   },
-  "firebase": {
-    "ServerUrl": "",
-    "enabled": false,
-    "uuid": "f51fef43-a55e-11ec-bac4-000ce7014683"
+  "dashboard": {
+    "current": "Default",
+    "dashboards": [
+      {
+        "friendly_name": "Default Dashboard",
+        "html_name": "dash_default.html",
+        "name": "Default"
+      },
+      {
+        "friendly_name": "Basic Dashboard",
+        "html_name": "dash_basic.html",
+        "name": "Basic"
+      }
+    ]
+  },
+  "dev_pins": {
+    "display": {
+      "dc": 24,
+      "led": 5,
+      "rst": 25
+    },
+    "distance": {
+      "echo": 27,
+      "trig": 23
+    },
+    "input": {
+      "down_dt": 20,
+      "enter_sw": 21,
+      "up_clk": 16
+    }
   },
   "globals": {
+    "augerrate": 0.3,
+    "auto_power_off": false,
     "buttonslevel": "HIGH",
+    "dc_fan": false,
     "debug_mode": false,
-    "four_probes": false,
+    "disp_rotation": 0,
+    "ext_data": false,
+    "first_time_setup": false,
+    "global_control_panel": false,
     "grill_name": "",
     "page_theme": "light",
     "shutdown_timer": 600,
+    "standalone": true,
+    "startup_timer": 240,
     "triggerlevel": "LOW",
     "units": "F"
   },
@@ -31,37 +75,116 @@
     "autorefresh": "on",
     "clearhistoryonstart": true,
     "datapoints": 60,
-    "minutes": 45
-  },
-  "ifttt": {
-    "APIKey": "",
-    "enabled": false
+    "minutes": 45,
+    "probe_config": {
+      "Grill": {
+        "bg_color": "rgb(0, 64, 255, 1)",
+        "bg_color_setpoint": "rgb(0, 64, 255, 1)",
+        "bg_color_target": "rgb(0, 128, 255, 1)",
+        "dash_setpoint": true,
+        "enabled": true,
+        "fill": false,
+        "line_color": "rgb(0, 64, 255, 1)",
+        "line_color_setpoint": "rgb(0, 64, 255, 1)",
+        "line_color_target": "rgb(0, 128, 255, 1)",
+        "name": "Grill",
+        "type": "Primary"
+      }
+    }
   },
   "inpins": {
     "selector": 17
   },
+  "keep_warm": {
+    "s_plus": false,
+    "temp": 165
+  },
   "lastupdated": {
-    "time": 1648936323
+    "time": 1686419783
   },
   "modules": {
-    "adc": "max31855",
-    "display": "prototype",
-    "dist": "prototype",
+    "display": "none",
+    "dist": "none",
     "grillplat": "pifire"
+  },
+  "notify_services": {
+    "apprise": {
+      "enabled": false,
+      "locations": {}
+    },
+    "ifttt": {
+      "APIKey": "",
+      "enabled": false
+    },
+    "influxdb": {
+      "bucket": "",
+      "enabled": false,
+      "org": "",
+      "token": "",
+      "url": ""
+    },
+    "onesignal": {
+      "app_id": "",
+      "devices": {},
+      "enabled": false,
+      "uuid": "afc59d40-07b7-11ee-ab8b-00155dff8cef"
+    },
+    "pushbullet": {
+      "APIKey": "",
+      "PublicURL": "",
+      "enabled": false
+    },
+    "pushover": {
+      "APIKey": "",
+      "PublicURL": "",
+      "UserKeys": "",
+      "enabled": false
+    }
   },
   "outpins": {
     "auger": 21,
     "fan": 20,
-    "igniter": 16,
-    "power": 4
+    "igniter": 16
   },
   "pelletlevel": {
     "empty": 22,
     "full": 4,
     "warning_enabled": true,
-    "warning_level": 25
+    "warning_level": 25,
+    "warning_time": 20
   },
   "probe_settings": {
+    "probe_map": {
+      "probe_devices": [
+        {
+          "config": {},
+          "device": "MAX31855",
+          "module": "max31855",
+          "ports": [
+            "spi0"
+          ]
+        }
+      ],
+      "probe_info": [
+        {
+          "device": "MAX31855",
+          "enabled": true,
+          "label": "Grill",
+          "name": "Grill",
+          "port": "spi0",
+          "profile": {
+            "A": 0.04136906456,
+            "B": -0.00677987613,
+            "C": 2.760294589e-05,
+            "Rd": 10000,
+            "Vs": 3.28,
+            "id": "PT-1000-OEM",
+            "name": "PT-1000-Grill-Probe-OEM"
+          },
+          "type": "Primary"
+        }
+      ]
+    },
     "probe_profiles": {
       "ET73-HM": {
         "A": 0.00024723753,
@@ -69,6 +192,7 @@
         "C": 1.3879768e-07,
         "Rd": 10000,
         "Vs": 3.28,
+        "id": "ET73-HM",
         "name": "ET-73-Heatermeter"
       },
       "ET73-SP": {
@@ -77,6 +201,7 @@
         "C": 1.2636414e-07,
         "Rd": 10000,
         "Vs": 3.28,
+        "id": "ET73-SP",
         "name": "ET-73-skyeperry1"
       },
       "PT-1000-OEM": {
@@ -85,6 +210,7 @@
         "C": 2.760294589e-05,
         "Rd": 10000,
         "Vs": 3.28,
+        "id": "PT-1000-OEM",
         "name": "PT-1000-Grill-Probe-OEM"
       },
       "PT-1000-PiFire": {
@@ -93,6 +219,7 @@
         "C": 4.3768560703857386e-05,
         "Rd": 10000,
         "Vs": 3.28,
+        "id": "PT-1000-PiFire",
         "name": "PT-1000-Grill-Probe-PiFire"
       },
       "TWPS00": {
@@ -101,6 +228,7 @@
         "C": 9.515686e-08,
         "Rd": 10000,
         "Vs": 3.28,
+        "id": "TWPS00",
         "name": "Thermoworks-Pro-Series-HeaterMeter"
       },
       "iGrill-HM": {
@@ -109,30 +237,50 @@
         "C": 1.154400438e-07,
         "Rd": 10000,
         "Vs": 3.28,
+        "id": "iGrill-HM",
         "name": "iGrill-Heatermeter"
       }
-    },
-    "probes_enabled": [
-      1,
-      0,
-      0
-    ]
+    }
   },
-  "probe_types": {
-    "grill0type": "PT-1000-OEM",
-    "probe1type": "TWPS00",
-    "probe2type": "TWPS00"
+  "pwm": {
+    "frequency": 30,
+    "max_duty_cycle": 100,
+    "min_duty_cycle": 20,
+    "profiles": [
+      {
+        "duty_cycle": 20
+      },
+      {
+        "duty_cycle": 35
+      },
+      {
+        "duty_cycle": 50
+      },
+      {
+        "duty_cycle": 75
+      },
+      {
+        "duty_cycle": 100
+      }
+    ],
+    "pwm_control": false,
+    "temp_range_list": [
+      3,
+      7,
+      10,
+      15
+    ],
+    "update_time": 10
   },
-  "pushbullet": {
-    "APIKey": "",
-    "PublicURL": "",
-    "enabled": false
-  },
-  "pushover": {
-    "APIKey": "",
-    "PublicURL": "",
-    "UserKeys": "",
-    "enabled": false
+  "recipe": {
+    "probe_map": {
+      "food": [
+        "Probe1",
+        "Probe2",
+        "Probe3"
+      ],
+      "primary": "Grill"
+    }
   },
   "safety": {
     "maxstartuptemp": 100,
@@ -140,15 +288,52 @@
     "minstartuptemp": 75,
     "reigniteretries": 1
   },
+  "smartstart": {
+    "enabled": true,
+    "profiles": [
+      {
+        "augerontime": 15,
+        "p_mode": 0,
+        "startuptime": 360
+      },
+      {
+        "augerontime": 15,
+        "p_mode": 1,
+        "startuptime": 360
+      },
+      {
+        "augerontime": 15,
+        "p_mode": 3,
+        "startuptime": 240
+      },
+      {
+        "augerontime": 15,
+        "p_mode": 5,
+        "startuptime": 240
+      }
+    ],
+    "temp_range_list": [
+      60,
+      80,
+      90
+    ]
+  },
   "smoke_plus": {
-    "cycle": 10,
-    "duty_cycle": 50,
+    "duty_cycle": 75,
     "enabled": false,
-    "frequency": 1,
+    "fan_ramp": false,
     "max_temp": 220,
-    "min_temp": 160
+    "min_temp": 160,
+    "off_time": 5,
+    "on_time": 5
+  },
+  "start_to_mode": {
+    "after_startup_mode": "Smoke",
+    "primary_setpoint": 165
   },
   "versions": {
-    "server": "1.2.2"
+    "cookfile": "1.5.0",
+    "recipe": "1.0.0",
+    "server": "1.5.0"
   }
 }

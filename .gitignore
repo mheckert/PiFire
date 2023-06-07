@@ -32,3 +32,14 @@ test.json
 *.bak2
 
 pelletdb.json
+
+static/js/backups/
+
+
+history/
+
+static/img/tmp/
+
+recipes/recipe/
+
+*.log

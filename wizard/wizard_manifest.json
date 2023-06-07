@@ -1,0 +1,837 @@
+{
+	"modules" : {
+		"grillplatform" : {
+			"pifire" : {
+				"friendly_name" : "PiFire Standard",
+				"filename" : "pifire",
+				"description" : "This is the default PiFire module supporting the Raspberry Pi Zero W (1/2).  Choose this module if PiFire is running on a Raspberry Pi.",
+				"default" : true,
+				"image" : "raspizerow.png",
+				"py_dependencies" : [], 
+				"apt_dependencies" : [],
+				"settings_dependencies" : {
+					"standalone" : {
+						"friendly_name" : "Standalone",
+						"description" : "Select if your are using PiFire alongside the OEM Controller. ",
+						"options" : { "True" : "PiFire Only", "False" : "OEM Controller Present" },
+						"settings" : ["globals", "standalone"]
+					},
+					"triggerlevel" : {
+						"friendly_name" : "Relay Type",
+						"description" : "Select the trigger level for the relays on the platform.  ",
+						"options" : { "LOW" : "Active Low", "HIGH" : "Active High" },
+						"settings" : ["globals", "triggerlevel"]
+					}
+				}
+			},
+			"pifire_pwm" : {
+				"friendly_name" : "PiFire PWM Support",
+				"filename" : "pifire_pwm",
+				"description" : "This is the PWM PiFire module supporting the Raspberry Pi Zero W (1/2).  Choose this module if PiFire is running on a Raspberry Pi and your PCB supports a 12v DC PWM Fan.",
+				"default" : false,
+				"image" : "raspizerow.png",
+				"py_dependencies" : [],
+				"apt_dependencies" : [],
+				"settings_dependencies" : {
+					"standalone" : {
+						"friendly_name" : "Standalone",
+						"description" : "Select if your are using PiFire alongside the OEM Controller ",
+						"options" : { "True" : "PiFire Only" },
+						"settings" : ["globals", "standalone"],
+						"hidden": true
+					},
+					"triggerlevel" : {
+						"friendly_name" : "Relay Type",
+						"description" : "Select the trigger level for the relays on the platform.  ",
+						"options" : { "HIGH" : "Active High", "LOW" : "Active Low" },
+						"settings" : ["globals", "triggerlevel"]
+					},
+					"dc_fan" : {
+						"friendly_name" : "Fan Type",
+						"description" : "Select if your platform supports a DC PWM fan or uses a regular AC Fan. ",
+						"options" : { "True" : "PWM DC Fan" },
+						"settings" : ["globals", "dc_fan"],
+						"hidden" : true
+					}
+				}
+			},
+			"prototype" : {
+				"friendly_name" : "Prototype Test/Debug",
+				"filename" : "prototype",
+				"description" : "This module is used for testing and debug purposes only.  Only select this module if you know what you are doing.",
+				"default" : false,
+				"image" : "prototype.png",
+				"py_dependencies" : [], 
+				"apt_dependencies" : [],
+				"settings_dependencies" : {
+					"standalone" : {
+						"friendly_name" : "Standalone",
+						"description" : "Select if your are using PiFire alongside the OEM Controller ",
+						"options" : { "True" : "PiFire Only", "False" : "OEM Controller Present" },
+						"settings" : ["globals", "standalone"]
+					},
+					"triggerlevel" : {
+						"friendly_name" : "Relay Type",
+						"description" : "Select the trigger level for the relays on the platform.  ",
+						"options" : { "LOW" : "Active Low", "HIGH" : "Active High" },
+						"settings" : ["globals", "triggerlevel"]
+					},
+					"dc_fan" : {
+						"friendly_name" : "Fan Type",
+						"description" : "Select if your platform supports a DC PWM fan or uses a regular AC Fan. ",
+						"options" : { "False" : "Standard AC Fan", "True" : "PWM DC Fan" },
+						"settings" : ["globals", "dc_fan"]
+					}
+				}
+			} 
+		}, 
+		"probes" : {
+			"ads1115" : {
+				"friendly_name" : "ADS1115",
+				"filename" : "ads1115",
+				"description" : "This is an alternative PiFire module supporting the ADS1115 16-Bit ADC.  This module is no longer the default due to reports of issues.  If you experience trouble with this module, try the Adafruit modules.  There has been rumors of sellers shipping ADS1015 12-Bit ADC's instead of the ADS1115 16-Bit ADC's.  If you got one of these, you can try the 1015 library instead.",
+				"default" : false,
+				"image" : "ads1115.png",
+				"py_dependencies" : ["ADS1115"], 
+				"apt_dependencies" : [],
+				"settings_dependencies" : {
+					"units" : {
+						"friendly_name" : "Temp Units",
+						"description" : "Select the temperature units to use for PiFire globally.  (This can be modified in settings later)",
+						"options" : {"F" : "Fahrenheit", "C": "Celsius"},
+						"settings" : ["globals", "units"]
+					}
+				},
+				"device_specific" : {
+					"ports" : ["ADC0", "ADC1", "ADC2", "ADC3"],
+					"config" : {
+						"i2c_bus_addr" : {
+							"friendly_name" : "I2C Bus Address",
+							"description" : "Select the I2C bus address to use for this device.  Default is 0x48.  If you have more than one ADS1115, you can assign unique device bus address for up to four devices.",
+							"options" : {"0x48" : "0x48", "0x49": "0x49", "0x4A": "0x4A", "0x4B": "0x4B"}
+						}
+					}
+				}
+			},
+			"ads1015_adafruit" : {
+				"friendly_name" : "ADS1015 Adafruit",
+				"filename" : "ads1015_adafruit",
+				"description" : "This module supports the ADS1015 12-Bit ADC based on Adafruit's Circuit Python implementation/module.  This version can also be used with the ADS1115, as it is backward compatible.  Some fidelity may be lost due to the fact that the ADC has less bits to measure with, however in testing it seems to be reasonably good.  Use this if you are having issues with the default ADS1115 module.",
+				"default" : false,
+				"image" : "ads1115.png",
+				"py_dependencies" : ["adafruit-circuitpython-ads1x15"], 
+				"apt_dependencies" : [],
+				"settings_dependencies" : {
+					"units" : {
+						"friendly_name" : "Temp Units",
+						"description" : "Select the temperature units to use for PiFire globally.  (this can be modified in settings later)",
+						"options" : {"F" : "Fahrenheit", "C": "Celsius"},
+						"settings" : ["globals", "units"]
+					}
+				},
+				"device_specific" : {
+					"ports" : ["ADC0", "ADC1", "ADC2", "ADC3"],
+					"config" : {
+						"i2c_bus_addr" : {
+							"friendly_name" : "I2C Bus Address",
+							"description" : "Select the I2C bus address to use for this device.  Default is 0x48.  If you have more than one ADS1115, you can assign unique device bus address for up to four devices.",
+							"options" : {"0x48" : "0x48", "0x49": "0x49", "0x4A": "0x4A", "0x4B": "0x4B"}
+						}
+					}
+				}
+			},
+			"ads1115_adafruit" : {
+				"friendly_name" : "ADS1115 Adafruit",
+				"filename" : "ads1115_adafruit",
+				"description" : "This was the default module supporting the ADS1115 16-Bit ADC based on Adafruit's Circuit Python implementation/module.  This version is still actively updated and may support a wider range of hardware.  There has been rumors of sellers shipping ADS1015 12-Bit ADC's instead of the ADS1115 16-Bit ADC's.  If you got one of these, you can try the ADS1015 Adafruit library instead.",
+				"default" : false,
+				"image" : "ads1115.png",
+				"py_dependencies" : ["adafruit-circuitpython-ads1x15"], 
+				"apt_dependencies" : [],
+				"settings_dependencies" : {
+					"units" : {
+						"friendly_name" : "Temp Units",
+						"description" : "Select the temperature units to use for PiFire globally.  (this can be modified in settings later)",
+						"options" : {"F" : "Fahrenheit", "C": "Celsius"},
+						"settings" : ["globals", "units"]
+					}
+				},
+				"device_specific" : {
+					"ports" : ["ADC0", "ADC1", "ADC2", "ADC3"],
+					"config" : {
+						"i2c_bus_addr" : {
+							"friendly_name" : "I2C Bus Address",
+							"description" : "Select the I2C bus address to use for this device.  Default is 0x48.  If you have more than one ADS1115, you can assign unique device bus address for up to four devices.",
+							"options" : {"0x48" : "0x48", "0x49": "0x49", "0x4A": "0x4A", "0x4B": "0x4B"}
+						}
+					}
+				}
+			},
+			"max31855" : {
+				"friendly_name" : "Matt's MAX31855",
+				"filename" : "max31855",
+				"description" : "This SPI device reads multiple types of probes automatically inferring their type",
+				"default" : true,
+				"image" : "max31865.png",
+				"py_dependencies" : [],
+				"apt_dependencies" : [],
+				"settings_dependencies" : {
+					"units" : {
+						"friendly_name" : "Temp Units",
+						"description" : "Select the temperature units to use for PiFire globally.  (this can be modified in settings later)",
+						"options" : {"F" : "Fahrenheit", "C": "Celsius"},
+						"settings" : ["globals", "units"]
+					}
+				},
+				"device_specific" : {
+					"ports" : ["default"],
+					"config" : {}
+				}
+			},
+			"max31865" : {
+				"friendly_name" : "MAX31865 RTD",
+				"filename" : "max31865",
+				"description" : "This SPI device reads RTD style probes, such as the Traeger PT100(PT1000) RTD probe.  Note that special care may need to be taken if this is used with another SPI device (i.e. SPI Display) on the system.",
+				"default" : false,
+				"image" : "max31865.png",
+				"py_dependencies" : [], 
+				"apt_dependencies" : [],
+				"settings_dependencies" : {
+					"units" : {
+						"friendly_name" : "Temp Units",
+						"description" : "Select the temperature units to use for PiFire globally.  (this can be modified in settings later)",
+						"options" : {"F" : "Fahrenheit", "C": "Celsius"},
+						"settings" : ["globals", "units"]
+					}
+				},
+				"device_specific" : {
+					"ports" : ["RTD0"],
+					"config" : {
+						"cs" : {
+							"friendly_name" : "SPI Chip Select (CS)",
+							"description" : "SPI Chip Select (CS/CEx) pin used for this device.",
+							"options" : {"1" : "CS1", "0": "CS0"}
+						},
+						"rtd_nominal" : {
+							"friendly_name" : "RTD Nominal",
+							"description" : "RTD Nominal Resistance Value in Ohms. Default 1000 Ohms.",
+							"options" : {"1000" : "1000 Ohms", "100" : "100 Ohms"}
+						},
+						"ref_resistor" : {
+							"friendly_name" : "Reference Resistor",
+							"description" : "Reference Resistor Value in Ohms. Default 4300 Ohms.",
+							"options" : {"4300" : "4300 Ohms", "430" : "430 Ohms"}
+						},
+						"wires" : {
+							"friendly_name" : "RTD Wires",
+							"description" : "Number of RTD wires used for input.  Default 2",
+							"options" : {"2" : "2 Wires", "3" : "3 Wires", "4" : "4 Wires"}
+						}
+					} 
+				}
+			},
+			"max31865_adafruit" : {
+				"friendly_name" : "Adafruit MAX31865 RTD",
+				"filename" : "max31865_adafruit",
+				"description" : "This SPI device reads RTD style probes, such as the Traeger PT100(PT1000) RTD probe.  This version uses the Adafruit CircuitPython modules.  It should be noted that this module does not allow the use of CE0 or CE1, thus another GPIO should be used for the CS pin. Note that special care may need to be taken if this is used with another SPI device (i.e. SPI Display) on the system.",
+				"default" : false,
+				"image" : "max31865.png",
+				"py_dependencies" : ["adafruit-circuitpython-max31865"], 
+				"apt_dependencies" : [],
+				"settings_dependencies" : {
+					"units" : {
+						"friendly_name" : "Temp Units",
+						"description" : "Select the temperature units to use for PiFire globally.  (this can be modified in settings later)",
+						"options" : {"F" : "Fahrenheit", "C": "Celsius"},
+						"settings" : ["globals", "units"]
+					}
+				},
+				"device_specific" : {
+					"ports" : ["RTD0"],
+					"config" : {
+						"cs" : {
+							"friendly_name" : "SPI Chip Select (CS)",
+							"description" : "SPI Chip Select (CS/CEx) pin used for this device.",
+							"options" : {"D2" : "GPIO2", "D3": "GPIO3", "D4": "GPIO4", "D5": "GPIO5", "D6": "GPIO6", "D12": "GPI12", "D13": "GPIO13", "D14": "GPIO14", "D15": "GPIO15", "D16": "GPIO16", "D17": "GPIO17", "D18": "GPIO18", "D19": "GPIO19", "D20": "GPIO20", "D21": "GPIO21", "D22": "GPIO22", "D23": "GPIO23", "D24": "GPIO24", "D25": "GPIO25", "D26": "GPIO26", "D27": "GPIO27"}
+						},
+						"rtd_nominal" : {
+							"friendly_name" : "RTD Nominal",
+							"description" : "RTD Nominal Resistance Value in Ohms. Default 1000 Ohms.",
+							"options" : {"1000" : "1000 Ohms", "100" : "100 Ohms"}
+						},
+						"ref_resistor" : {
+							"friendly_name" : "Reference Resistor",
+							"description" : "Reference Resistor Value in Ohms. Default 4300 Ohms.",
+							"options" : {"4300" : "4300 Ohms", "430" : "430 Ohms"}
+						},
+						"wires" : {
+							"friendly_name" : "RTD Wires",
+							"description" : "Number of RTD wires used for input.  Default 2",
+							"options" : {"2" : "2 Wires", "3" : "3 Wires", "4" : "4 Wires"}
+						}
+					} 
+				}
+			},
+			"prototype" : {
+				"friendly_name" : "Prototype",
+				"filename" : "prototype",
+				"description" : "This is the test module for probe input.  It should only be used for testing & debug.",
+				"default" : false,
+				"image" : "prototype.png",
+				"py_dependencies" : [], 
+				"apt_dependencies" : [],
+				"settings_dependencies" : {
+					"units" : {
+						"friendly_name" : "Temp Units",
+						"description" : "Select the temperature units to use for PiFire globally.  (This can be modified in settings later)",
+						"options" : {"F" : "Fahrenheit", "C": "Celsius"},
+						"settings" : ["globals", "units"]
+					}
+				},
+				"device_specific" : {
+					"ports" : ["ADC0", "ADC1", "ADC2", "ADC3"],
+					"config" : {}
+				}			
+			},
+			"virtual_average" : {
+				"friendly_name" : "Virtual Probes - Average",
+				"filename" : "virtual_average",
+				"description" : "This is a virtual probe module that will average specific ports on real devices.",
+				"default" : false,
+				"image" : "virtual_probe.png",
+				"py_dependencies" : [], 
+				"apt_dependencies" : [],
+				"settings_dependencies" : {
+					"units" : {
+						"friendly_name" : "Temp Units",
+						"description" : "Select the temperature units to use for PiFire globally.  (This can be modified in settings later)",
+						"options" : {"F" : "Fahrenheit", "C": "Celsius"},
+						"settings" : ["globals", "units"]
+					}
+				},
+				"device_specific" : {
+					"ports" : ["VIRT0"],
+					"config" : {
+						"probes_list" : {
+							"friendly_name" : "Average Probes",
+							"description" : "A list of probes from other devices, to average. Select which probes should be averaged together with ctrl+click.",
+							"options" : {"list" : "List of probes to average."}
+						}
+					}
+				}			
+			},
+			"virtual_highest" : {
+				"friendly_name" : "Virtual Probes - Highest",
+				"filename" : "virtual_highest",
+				"description" : "This is a virtual probe module that will return the highest value from specific ports on real devices.",
+				"default" : false,
+				"image" : "virtual_probe.png",
+				"py_dependencies" : [], 
+				"apt_dependencies" : [],
+				"settings_dependencies" : {
+					"units" : {
+						"friendly_name" : "Temp Units",
+						"description" : "Select the temperature units to use for PiFire globally.  (This can be modified in settings later)",
+						"options" : {"F" : "Fahrenheit", "C": "Celsius"},
+						"settings" : ["globals", "units"]
+					}
+				},
+				"device_specific" : {
+					"ports" : ["VIRT0"],
+					"config" : {
+						"probes_list" : {
+							"friendly_name" : "Use Probes",
+							"description" : "A list of probes from other devices, to determine the highest value. Select which probes should used with ctrl+click.",
+							"options" : {"list" : "List of probes to utilize."}
+						}
+					}
+				}			
+			},
+			"virtual_lowest" : {
+				"friendly_name" : "Virtual Probes - Lowest",
+				"filename" : "virtual_lowest",
+				"description" : "This is a virtual probe module that will return the lowest value from specific ports on real devices.",
+				"default" : false,
+				"image" : "virtual_probe.png",
+				"py_dependencies" : [], 
+				"apt_dependencies" : [],
+				"settings_dependencies" : {
+					"units" : {
+						"friendly_name" : "Temp Units",
+						"description" : "Select the temperature units to use for PiFire globally.  (This can be modified in settings later)",
+						"options" : {"F" : "Fahrenheit", "C": "Celsius"},
+						"settings" : ["globals", "units"]
+					}
+				},
+				"device_specific" : {
+					"ports" : ["VIRT0"],
+					"config" : {
+						"probes_list" : {
+							"friendly_name" : "Use Probes",
+							"description" : "A list of probes from other devices, to determine the lowest value. Select which probes should used with ctrl+click.",
+							"options" : {"list" : "List of probes to utilize."}
+						}
+					}
+				}			
+			},
+			"virtual_median" : {
+				"friendly_name" : "Virtual Probes - Median",
+				"filename" : "virtual_median",
+				"description" : "This is a virtual probe module that will return the median value from specific ports on real devices.",
+				"default" : false,
+				"image" : "virtual_probe.png",
+				"py_dependencies" : [], 
+				"apt_dependencies" : [],
+				"settings_dependencies" : {
+					"units" : {
+						"friendly_name" : "Temp Units",
+						"description" : "Select the temperature units to use for PiFire globally.  (This can be modified in settings later)",
+						"options" : {"F" : "Fahrenheit", "C": "Celsius"},
+						"settings" : ["globals", "units"]
+					}
+				},
+				"device_specific" : {
+					"ports" : ["VIRT0"],
+					"config" : {
+						"probes_list" : {
+							"friendly_name" : "Use Probes",
+							"description" : "A list of probes from other devices, to determine the median value. Select which probes should used with ctrl+click.",
+							"options" : {"list" : "List of probes to utilize."}
+						}
+					}
+				}			
+			}
+		},
+		"display" : {
+			"ili9341e" : {
+				"friendly_name" : "ILI9341 TFT with Rotary Encoder Input (standard)",
+				"filename" : "ili9341e",
+				"description" : "The ILI9341 TFT Display Module LCD Screen is an affordable, popular display with a 320x240 resolution and color.  It comes in many different physical sizes from 2\" - 3.2\" with and without capacitive touch. This version of the module supports input based on the KY-040 rotary encoder.",
+				"notes" : "Pinout: Display - MISO = MISO(Pin 21), LED = GPIO05, SCK = SCLK(Pin 23), MOSI = MOSI(Pin 19), DC = GPIO24, RST = GPIO25, CS = CE0(Pin 24).  Encoder - CLK = GPIO16, DT = GPIO20, SW = GPIO21, GND = GND, VCC/+ = 3.3V",
+				"default" : false,
+				"image" : "ili9341-ky040.png",
+				"py_dependencies" : ["luma.lcd", "pyky040==0.1.4", "pillow==9.1.1"], 
+				"apt_dependencies" : [],
+				"settings_dependencies" : {
+					"disp_rotation" : {
+						"friendly_name" : "Display Rotation",
+						"description" : "Select the display rotation angle (Usually 0 degrees)",
+						"options" : {"0" : "0 degrees", "1": "90 degrees", "2": "180 degrees", "3": "270 degrees"},
+						"settings" : ["globals", "disp_rotation"]
+					}
+				}
+			},
+			"ili9341em" : {
+				"friendly_name" : "ILI9341 TFT with Rotary Encoder Input (max31865 version)",
+				"filename" : "ili9341em",
+				"description" : "NOTE: This version should be used if also using the max31865, due to SPI conflicts with the standard implementation.  The ILI9341 TFT Display Module LCD Screen is an affordable, popular display with a 320x240 resolution and color.  It comes in many different physical sizes from 2\" - 3.2\" with and without capacitive touch. This version of the module supports input based on the KY-040 rotary encoder.",
+				"notes" : "Pinout: Display - MISO = MISO(Pin 21), LED = GPIO12, SCK = SCLK(Pin 23), MOSI = MOSI(Pin 19), DC = GPIO16, RST = GPIO20, CS = CE0(Pin 24). Encoder - CLK = GPIO25, DT = GPIO24, SW = GPIO23, GND = GND, VCC/+ = 3.3V",
+				"default" : false,
+				"image" : "ili9341-ky040.png",
+				"py_dependencies" : ["luma.lcd", "pyky040==0.1.4", "pillow==9.1.1"], 
+				"apt_dependencies" : [],
+				"settings_dependencies" : {
+					"disp_rotation" : {
+						"friendly_name" : "Display Rotation",
+						"description" : "Select the display rotation angle (Usually 0 degrees)",
+						"options" : {"0" : "0 degrees", "1": "90 degrees", "2": "180 degrees", "3": "270 degrees"},
+						"settings" : ["globals", "disp_rotation"]
+					}
+				}
+			},
+			"ili9341" : {
+				"friendly_name" : "ILI9341 TFT",
+				"filename" : "ili9341",
+				"description" : "The ILI9341 TFT Display Module LCD Screen is an affordable, popular display with a 320x240 resolution and color.  It comes in many different physical sizes from 2\" - 3.2\" with and without capacitive touch.",
+				"notes" : "Pinout: MISO = MISO(Pin 21), LED = GPIO05, SCK = SCLK(Pin 23), MOSI = MOSI(Pin 19), DC = GPIO24, RST = GPIO25, CS = CE0(Pin 24)",
+				"default" : false,
+				"image" : "ili9341.png",
+				"py_dependencies" : ["luma.lcd", "pillow==9.1.1"], 
+				"apt_dependencies" : [],
+				"settings_dependencies" : {
+					"disp_rotation" : {
+						"friendly_name" : "Display Rotation",
+						"description" : "Select the display rotation angle (Usually 0 degrees)",
+						"options" : {"0" : "0 degrees", "1": "90 degrees", "2": "180 degrees", "3": "270 degrees"},
+						"settings" : ["globals", "disp_rotation"]
+					}
+				}
+			},
+			"ili9341b" : {
+				"friendly_name" : "ILI9341 TFT with 3-Button Input",
+				"filename" : "ili9341b",
+				"description" : "The ILI9341 TFT Display Module LCD Screen is an affordable, popular display with a 320x240 resolution and color.  It comes in many different physical sizes from 2\" - 3.2\" with and without capacitive touch. This version of the module supports a three button input.",
+				"notes" : "Pinout:  Display - MISO = MISO(Pin 21), LED = GPIO05, SCK = SCLK(Pin 23), MOSI = MOSI(Pin 19), DC = GPIO24, RST = GPIO25, CS = CE0(Pin 24). Buttons - UP = GPIO16, DOWN = GPIO20, ENTER = GPIO21, GND = GND, VCC = 3.3V",
+				"default" : false,
+				"image" : "ili9341b.png",
+				"py_dependencies" : ["luma.lcd", "pillow==9.1.1"], 
+				"apt_dependencies" : ["python3-gpiozero"],
+				"settings_dependencies" : {
+					"disp_rotation" : {
+						"friendly_name" : "Display Rotation",
+						"description" : "Select the display rotation angle (Usually 0 degrees)",
+						"options" : {"0" : "0 degrees", "1": "90 degrees", "2": "180 degrees", "3": "270 degrees"},
+						"settings" : ["globals", "disp_rotation"]
+					},
+					"buttonslevel" : {
+						"friendly_name" : "Button Level",
+						"description" : "Select how your button hardware is configured. (HIGH - Pullups, LOW - Pulldowns)",
+						"options" : {"HIGH" : "Pullups", "LOW": "Pulldowns"},
+						"settings" : ["globals", "buttonslevel"]
+					}
+				}
+			},
+			"st7789_240x320b" : {
+				"friendly_name" : "ST7789 IPS Display 240x320px w/Button Input",
+				"filename" : "st7789_240x320b",
+				"description" : "The ST7789 is a 2inch LCD IPS Screen with a resolution of 240x320px and is an affordable spi display with color. This module supports the 240x320 version and provides the advanced color interface (similar to the ILI9341). This version of the module supports a three button input.",
+				"notes" : "Pinout:  Display - DIN = MOSI(Pin19), CLK=SCLK(Pin23), CS=CE0(Pin24), DC=GPIO24, RST=GPIO25, BL=GPIO05. Buttons - UP = GPIO16, DOWN = GPIO20, ENTER = GPIO21, GND = GND, VCC = 3.3V",
+				"default" : false,
+				"image" : "st7789b.png",
+				"py_dependencies" : ["st7789", "pillow==9.1.1"],
+				"apt_dependencies" : ["python3-gpiozero", "python3-pil", "python3-numpy"],
+				"settings_dependencies" : {
+					"disp_rotation" : {
+						"friendly_name" : "Display Rotation",
+						"description" : "Select the display rotation angle (Usually 0 degrees)",
+						"options" : {"0" : "0 degrees", "90": "90 degrees", "180": "180 degrees", "270": "270 degrees"},
+						"settings" : ["globals", "disp_rotation"]
+					},
+					"buttonslevel" : {
+						"friendly_name" : "Button Level",
+						"description" : "Select how your button hardware is configured. (HIGH - Pullups, LOW - Pulldowns)",
+						"options" : {"HIGH" : "Pullups", "LOW": "Pulldowns"},
+						"settings" : ["globals", "buttonslevel"]
+					}
+				}
+			},
+			"st7789_240x320e" : {
+				"friendly_name" : "ST7789 IPS Display 240x320px w/ Rotary Encoder Input",
+				"filename" : "st7789_240x320e",
+				"description" : "The ST7789 is a 2inch LCD IPS Screen with a resolution of 240x320px and is an affordable spi display with color. This module supports the 240x320 version and provides the advanced color interface (similar to the ILI9341). This version supports input based on the KY-040 rotary encoder.",
+				"notes" : "Pinout:  Display - DIN = MOSI(Pin19), CLK=SCLK(Pin23), CS=CE0(Pin24), DC=GPIO24, RST=GPIO25, BL=GPIO05. Encoder - CLK = GPIO16, DT = GPIO20, SW = GPIO21, GND = GND, VCC/+ = 3.3V",
+				"default" : false,
+				"image" : "st7789e.png",
+				"py_dependencies" : ["st7789", "pyky040==0.1.4", "pillow==9.1.1"],
+				"apt_dependencies" : ["python3-pil", "python3-numpy"],
+				"settings_dependencies" : {
+					"disp_rotation" : {
+						"friendly_name" : "Display Rotation",
+						"description" : "Select the display rotation angle (Usually 0 degrees)",
+						"options" : {"0" : "0 degrees", "90": "90 degrees", "180": "180 degrees", "270": "270 degrees"},
+						"settings" : ["globals", "disp_rotation"]
+					}
+				}
+			},
+			"st7789_240x320" : {
+				"friendly_name" : "ST7789 IPS Display 240x320px",
+				"filename" : "st7789_240x320",
+				"description" : "The ST7789 is a 2inch LCD IPS Screen with a resolution of 240x320px and is an affordable spi display with color. This module supports the 240x320 version and provides the advanced color interface (similar to the ILI9341).",
+				"notes" : "Pinout:  DIN = MOSI(Pin19), CLK=SCLK(Pin23), CS=CE0(Pin24), DC=GPIO24, RST=GPIO25, BL=GPIO05",
+				"default" : false,
+				"image" : "st7789p.png",
+				"py_dependencies" : ["st7789", "pillow==9.1.1"],
+				"apt_dependencies" : ["python3-pil", "python3-numpy"],
+				"settings_dependencies" : {
+					"disp_rotation" : {
+						"friendly_name" : "Display Rotation",
+						"description" : "Select the display rotation angle (Usually 0 degrees)",
+						"options" : {"0" : "0 degrees", "90": "90 degrees", "180": "180 degrees", "270": "270 degrees"},
+						"settings" : ["globals", "disp_rotation"]
+					}
+				}
+			},
+			"none" : {
+				"friendly_name" : "None",
+				"filename" : "none",
+				"description" : "This is for systems without a display.  This module should be selected if no display is present.",
+				"default" : true,
+				"image" : "none.png",
+				"py_dependencies" : [], 
+				"apt_dependencies" : [],
+				"settings_dependencies" : {}			
+			},
+			"prototype" : {
+				"friendly_name" : "Prototype",
+				"filename" : "prototype",
+				"description" : "This is the test module for display.  This should be used for development & debug only.",
+				"default" : false,
+				"image" : "prototype.png",
+				"py_dependencies" : [], 
+				"apt_dependencies" : [],
+				"settings_dependencies" : {}			
+			},
+			"pygame_64x128" : {
+				"friendly_name" : "Pygame Test Module 64x128px",
+				"filename" : "pygame_64x128",
+				"description" : "This is the test module for display using Pygame.  This should be used for development & debug only.",
+				"default" : false,
+				"image" : "pygame.png",
+				"py_dependencies" : ["pygame"], 
+				"apt_dependencies" : [],
+				"settings_dependencies" : {}			
+			},
+			"pygame_240x320" : {
+				"friendly_name" : "Pygame Test Module 240x320px",
+				"filename" : "pygame_240x320",
+				"description" : "This is the test module for display using Pygame.  This should be used for development & debug only.",
+				"default" : false,
+				"image" : "pygame.png",
+				"py_dependencies" : ["pygame", "pillow==9.1.1"], 
+				"apt_dependencies" : [],
+				"settings_dependencies" : {
+					"disp_rotation" : {
+						"friendly_name" : "Display Rotation",
+						"description" : "Select the display rotation angle (Usually 0 degrees)",
+						"options" : {"0" : "0 degrees", "90": "90 degrees", "180": "180 degrees", "270": "270 degrees"},
+						"settings" : ["globals", "disp_rotation"]
+					}
+				}
+			},
+			"pygame_240x320b" : {
+				"friendly_name" : "Pygame Test Module 240x320px w/Button Input",
+				"filename" : "pygame_240x320b",
+				"description" : "This is the test module for display using Pygame.  This should be used for development & debug only.",
+				"default" : false,
+				"image" : "pygame.png",
+				"py_dependencies" : ["pygame", "pillow==9.1.1"], 
+				"apt_dependencies" : [],
+				"settings_dependencies" : {
+					"disp_rotation" : {
+						"friendly_name" : "Display Rotation",
+						"description" : "Select the display rotation angle (Usually 0 degrees)",
+						"options" : {"0" : "0 degrees", "90": "90 degrees", "180": "180 degrees", "270": "270 degrees"},
+						"settings" : ["globals", "disp_rotation"]
+					}
+				}
+			},
+			"ssd1306" : {
+				"friendly_name" : "SSD1306 OLED 64x128px",
+				"filename" : "ssd1306",
+				"description" : "These displays are small, only about 1\" diagonal, but very readable due to the high contrast of an OLED display. This display is made of 128x64 individual white OLED pixels, each one is turned on or off by the controller chip.",
+				"default" : false,
+				"image" : "ssd1306.png",
+				"py_dependencies" : ["luma.oled"], 
+				"apt_dependencies" : [],
+				"settings_dependencies" : {}			
+			},
+			"ssd1306b" : {
+				"friendly_name" : "SSD1306 OLED 64x128px w/Buttons",
+				"filename" : "ssd1306b",
+				"description" : "These displays are small, only about 1\" diagonal, but very readable due to the high contrast of an OLED display. This display is made of 128x64 individual white OLED pixels, each one is turned on or off by the controller chip.",
+				"default" : false,
+				"image" : "ssd1306b.png",
+				"py_dependencies" : ["luma.oled"], 
+				"apt_dependencies" : [],
+				"settings_dependencies" : {
+					"buttonslevel" : {
+						"friendly_name" : "Button Level",
+						"description" : "Select how your button hardware is configured. (HIGH - Pullups, LOW - Pulldowns)",
+						"options" : {"HIGH" : "Pullups", "LOW": "Pulldowns"},
+						"settings" : ["globals", "buttonslevel"]
+					}
+				}
+			},
+			"st7789p" : {
+				"friendly_name" : "ST7789p IPS Display 240x240px",
+				"filename" : "st7789p",
+				"description" : "The ST7789 is a 1.3inch LCD IPS Screen with a resolution of 240x240px and is an affordable SPI display.  This one can be complicated to find the right compatible display, so your mileage may vary.  This module supports the 240x240 version and provides a simple color interface (similar to the SSD1306 OLED).",
+				"notes" : "Pinout:  DIN = MOSI(Pin19), CLK=SCLK(Pin23), CS=CE0(Pin24), DC=GPIO24, RST=GPIO25, BL=GPIO05",
+				"default" : false,
+				"image" : "st7789p.png",
+				"py_dependencies" : ["st7789"], 
+				"apt_dependencies" : ["python3-rpi.gpio", "python3-spidev", "python3-pil", "python3-numpy"],
+				"settings_dependencies" : {
+					"disp_rotation" : {
+						"friendly_name" : "Display Rotation",
+						"description" : "Select the display rotation angle (Usually 0 degrees)",
+						"options" : {"0" : "0 degrees", "180": "180 degrees"},
+						"settings" : ["globals", "disp_rotation"]
+					}
+				}
+			}
+		}, 
+		"distance" : {
+			"hcsr04" : {
+				"friendly_name" : "HCSR04 Ultrasonic Distance Sensor",
+				"filename" : "hcsr04",
+				"description" : "This economical sensor provides 2cm to 400cm of non-contact measurement functionality with a ranging accuracy that can reach up to 3mm.",
+				"default" : false,
+				"image" : "hcsr04.png",
+				"py_dependencies" : ["hcsr04sensor"], 
+				"apt_dependencies" : [],
+				"settings_dependencies" : {}
+			},
+			"vl53l0x" : {
+				"friendly_name" : "VL53L0X Time of Flight Distance Sensor",
+				"filename" : "vl53l0x",
+				"description" : "The VL53L0X is a new generation Time-of-Flight (ToF) laser-ranging module and is the hopper sensor of choice for the PiFire project.",
+				"default" : false,
+				"image" : "vl53l0x.png",
+				"py_dependencies" : ["git+https://github.com/pimoroni/VL53L0X-python.git"], 
+				"apt_dependencies" : ["python3-smbus"],
+				"settings_dependencies" : {}
+			},
+			"prototype" : {
+				"friendly_name" : "Prototype / Test",
+				"filename" : "prototype",
+				"description" : "This module should be chosen for testing & debug.",
+				"default" : false,
+				"image" : "prototype.png",
+				"py_dependencies" : [], 
+				"apt_dependencies" : [],
+				"settings_dependencies" : {}			
+			},
+			"none" : {
+				"friendly_name" : "None",
+				"filename" : "none",
+				"description" : "This module should be chosen if there is no distance sensor hardware installed.",
+				"default" : true,
+				"image" : "none.png",
+				"py_dependencies" : [], 
+				"apt_dependencies" : [],
+				"settings_dependencies" : {}			
+			}
+		}
+	}, 
+	"probe_config_options" : {
+		"name" : {
+			"display_name" : "Probe Name",
+			"options" : {},
+			"description" : "This name will be displayed throughout the PiFire UI for this probe.  It should be unique to this probe and not match other probe names."
+		}, 
+		"device_port" : {
+			"display_name" : "Device & Port",
+			"options" : {},
+			"description" : "The device name and port where the temperature readings will be read from."
+		}, 
+		"type" : {
+			"display_name" : "Probe Type",
+			"options" : {"Food": "Food Probe", "Primary": "Primary Probe", "Aux": "Auxillary Probe"},
+			"description" : "Probe types are as follows: <i><br><strong>Food</strong> - Used as a food probe to track the temperature of food items.  This probe will be displayed in the UI and tracked in history. <br><strong>Primary</strong> - Used as the primary probe to control the grill/smoker in hold mode, etc.  There must be one Primary probe, and only one.  This probe is displayed in the UI and tracked in the history.  <br><strong>Aux</strong> - Auxillary temperature input, not displayed in the UI, but tracked in the history.</i>"
+		}, 
+		"profile_id" : {
+			"display_name" : "Probe Profile",
+			"options" : {},
+			"description" : "The probe profile that will be applied to this probe."
+		}, 
+		"enabled" : {
+			"display_name" : "Enabled",
+			"options" : {"true": "Yes", "false": "No"},
+			"description" : "Probe is enabled and visible in the UI."
+		}
+	},
+	"boards" : {
+		"MattsPiFirev2x" : {
+			"name" : "Matts PiFire v2.x",
+			"id" : "MattsPiFirev2x",
+			"description" : "Description of the board here.  Future expansion of PiFire wizard/configuration.",
+			"probe_map": {
+				"probe_devices": [
+				  {
+					"config": { },
+					"device": "MAX31855",
+					"module": "max31855",
+					"ports": [
+					  "spi0"
+					]
+				  }
+				],
+				"probe_info": [
+				  {
+					"name": "Grill",
+					"type": "Primary",
+					"enabled": true,
+					"label": "Grill",
+					"device": "MAX31855",
+					"port": "spi0",
+					"profile": {
+					  "A": 0.04136906456,
+					  "B": -0.00677987613,
+					  "C": 2.760294589e-05,
+					  "Rd": 10000,
+					  "Vs": 3.28,
+					  "id": "PT-1000-OEM",
+					  "name": "PT-1000-Grill-Probe-OEM"
+					}
+				  }
+				]
+			}
+		},
+		"PiFirev2x" : {
+			"name" : "PiFire v2.x",  
+			"id" : "PiFirev2x",
+			"description" : "Description of the board here.  Future expansion of PiFire wizard/configuration.",
+			"probe_map": {
+				"probe_devices": [
+				  {
+					"config": {
+						"i2c_bus_addr" : "0x48"
+					},
+					"device": "ADS1115",
+					"module": "ads1115_adafruit",
+					"ports": [
+					  "ADC0",
+					  "ADC1",
+					  "ADC2",
+					  "ADC3"
+					]
+				  }
+				],
+				"probe_info": [
+				  {
+					"name": "Grill",
+					"type": "Primary",
+					"enabled": true,
+					"label": "Grill",
+					"device": "ADS1115",
+					"port": "ADC0",
+					"profile": {
+					  "A": 0.04136906456,
+					  "B": -0.00677987613,
+					  "C": 2.760294589e-05,
+					  "Rd": 10000,
+					  "Vs": 3.28,
+					  "id": "PT-1000-OEM",
+					  "name": "PT-1000-Grill-Probe-OEM"
+					}
+				  },
+				  {
+					"name": "Probe-1",
+					"type": "Food",
+					"enabled": true,
+					"label": "Probe1",
+					"device": "ADS1115",
+					"port": "ADC1",
+					"profile": {
+					  "A": 0.00073431401,
+					  "B": 0.0002157437,
+					  "C": 9.515686e-08,
+					  "Rd": 10000,
+					  "Vs": 3.28,
+					  "id": "TWPS00",
+					  "name": "Thermoworks-Pro-Series-HeaterMeter"
+					}
+				  },
+				  {
+					"name": "Probe-2",
+					"type": "Food",
+					"enabled": true,
+					"label": "Probe2",
+					"device": "ADS1115",
+					"port": "ADC2",
+					"profile": {
+					  "A": 0.00073431401,
+					  "B": 0.0002157437,
+					  "C": 9.515686e-08,
+					  "Rd": 10000,
+					  "Vs": 3.28,
+					  "id": "TWPS00",
+					  "name": "Thermoworks-Pro-Series-HeaterMeter"
+					}
+				  }
+				]
+			}
+		}
+	}
+}

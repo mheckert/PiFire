@@ -21,7 +21,7 @@ else
         export SUDO="sudo"
         export SUDOE="sudo -E"
     else
-        echo "Please install sudo or run this as root."
+        echo "Please install sudo."
         exit 1
     fi
 fi
@@ -39,7 +39,7 @@ r=$(( r < 20 ? 20 : r ))
 c=$(( c < 70 ? 70 : c ))
 
 # Display the welcome dialog
-whiptail --msgbox --backtitle "Welcome" --title "PiFire Automated Installer" "This installer will transform your Raspberry Pi into a connected Smoker Controller.  NOTE: This installer is intended to be run on a fresh install of Raspberry Pi OS Buster or later." ${r} ${c}
+whiptail --msgbox --backtitle "Welcome" --title "PiFire Automated Installer" "This installer will transform your Raspberry Pi into a connected Smoker Controller.  NOTE: This installer is intended to be run on a fresh install of Raspberry Pi OS Lite 32-Bit Buster or later." ${r} ${c}
 
 # Starting actual steps for installation
 clear
@@ -64,22 +64,43 @@ echo "**                                                                     **"
 echo "*************************************************************************"
 $SUDO apt upgrade -y
 
-# Install dependancies
+# Install dependencies
 clear
 echo "*************************************************************************"
 echo "**                                                                     **"
-echo "**      Installing Dependancies... (This could take several minutes)   **"
+echo "**      Installing Dependencies... (This could take several minutes)   **"
 echo "**                                                                     **"
 echo "*************************************************************************"
-$SUDO apt install python3-dev python3-pip python3-rpi.gpio python3-pil libfreetype6-dev libjpeg-dev build-essential libopenjp2-7 libtiff5 nginx git gunicorn3 supervisor ttf-mscorefonts-installer redis-server -y
+$SUDO apt install python3-dev python3-pip python3-pil libfreetype6-dev libjpeg-dev build-essential libopenjp2-7 libtiff5 nginx git gunicorn3 supervisor ttf-mscorefonts-installer redis-server -y
+$SUDO apt install python3-rpi.gpio -y
+$SUDO apt install -y python3-scipy
 $SUDO pip3 install flask
-$SUDO pip3 install pushbullet.py
-$SUDO pip3 install flask_qrcode
+$SUDO pip3 install flask-mobility
+$SUDO pip3 install flask-qrcode
 $SUDO pip3 install flask-socketio
 $SUDO pip3 install eventlet==0.30.2
 $SUDO pip3 install gpiozero
 $SUDO pip3 install redis
 $SUDO pip3 install uuid
+$SUDO pip3 install influxdb-client[ciso]
+$SUDO pip3 install apprise
+$SUDO pip3 install scikit-fuzzy
+$SUDO pip3 install scikit-learn
+$SUDO apt install libatlas-base-dev -y
+
+# Setup config.txt to enable busses 
+clear
+echo "*************************************************************************"
+echo "**                                                                     **"
+echo "**      Configuring config.txt                                         **"
+echo "**                                                                     **"
+echo "*************************************************************************"
+
+# Enable SPI - Needed for some displays
+echo "dtparam=spi=on" | $SUDO tee -a /boot/config.txt > /dev/null
+# Enable I2C - Needed for some displays, ADCs, distance sensors
+echo "dtparam=i2c_arm=on" | $SUDO tee -a /boot/config.txt > /dev/null
+echo "i2c-dev" | $SUDO tee -a /etc/modules > /dev/null
 
 # Grab project files
 clear
@@ -88,11 +109,16 @@ echo "**                                                                     **"
 echo "**      Cloning PiFire from GitHub...                                  **"
 echo "**                                                                     **"
 echo "*************************************************************************"
-cd ~
+cd /usr/local/bin
 # Use a shallow clone to reduce download size
-git clone --depth 1 https://github.com/nebhead/pifire
+$SUDO git clone --depth 1 https://github.com/nebhead/pifire
 # Replace the below command to fetch development branch
 #git clone --depth 1 --branch development https://github.com/nebhead/pifire
+
+# After doing a shallow clone, to be able to checkout other branches from remote,
+# git remote set-branches origin '*'
+# git fetch -v
+# git checkout development
 
 ### Setup nginx to proxy to gunicorn
 clear
@@ -102,7 +128,7 @@ echo "**      Configuring nginx...                                           **"
 echo "**                                                                     **"
 echo "*************************************************************************"
 # Move into install directory
-cd ~/pifire/auto-install/
+cd /usr/local/bin/pifire/auto-install/nginx
 
 # Delete default configuration
 $SUDO rm /etc/nginx/sites-enabled/default
@@ -126,7 +152,7 @@ echo "*************************************************************************"
 
 # Copy configuration files (control.conf, webapp.conf) to supervisor config directory
 # NOTE: If you used a different directory for the installation then make sure you edit the *.conf files appropriately
-cd ~/pifire/supervisor
+cd /usr/local/bin/pifire/auto-install/supervisor
 
 $SUDO cp *.conf /etc/supervisor/conf.d/
 
@@ -148,18 +174,7 @@ fi
 # If supervisor isn't already running, startup Supervisor
 $SUDO service supervisor start
 
-clear
-echo "*************************************************************************"
-echo "**                                                                     **"
-echo "**      Configuring Modules...                                         **"
-echo "**                                                                     **"
-echo "*************************************************************************"
-
-cd ~/pifire # Change dir to where the settings.py application is (and common.py)
-
-$SUDO bash modules.sh
-
 # Rebooting
-whiptail --msgbox --backtitle "Install Complete / Reboot Required" --title "Installation Completed - Rebooting" "Congratulations, the installation is complete.  At this time, we will perform a reboot and your application should be ready.  You should be able to access your application by opening a browser on your PC or other device and using the IP address for this Pi.  Enjoy!" ${r} ${c}
+whiptail --msgbox --backtitle "Install Complete / Reboot Required" --title "Installation Completed - Rebooting" "Congratulations, the installation is complete.  At this time, we will perform a reboot and your application should be ready.  On first boot, the wizard will guide you through the remaining setup steps.  You should be able to access your application by opening a browser on your PC or other device and using the IP address (or http://[hostname].local) for this device.  Enjoy!" ${r} ${c}
 clear
 $SUDO reboot

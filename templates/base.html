@@ -31,10 +31,21 @@
 			<a class="navbar-brand" href="/">
 				<img src="{{ url_for('static', filename='img/launcher-icon-1x.png') }}" width="30" height="30" class="d-inline-block align-top" alt="">
 				<b>Pi<i class="text-danger">Fire</i></b>{% if grill_name != '' %} | {{ grill_name }}{% endif %}</a>
-
-				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
+				
+				<div class="btn-toolbar" role="toolbar">
+					<div class="btn-group mr-2" role="group">
+						<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+							<i class="fas fa-bars"></i>
+						</button>
+					</div>
+					{% block timer_toggler %}
+					<div class="btn-group mr-2" role="group">
+						<button type="button" class="btn btn-outline-secondary border-secondary" id="timerButton" onclick="timerToggle()">
+							<i class="fas fa-stopwatch"></i>
+						</button>
+					</div>
+					{% endblock %}
+				</div>
 
 				<div class="collapse navbar-collapse" id="navbarNav">
 					<ul class="nav navbar-nav mr-auto">
@@ -42,6 +53,9 @@
 							<a class="nav-link" href="/">Dashboard</a>
 						</li>
                         <li class="nav-item">
+							<a class="nav-link" href="/recipes">Recipes</a>
+						</li>
+						<li class="nav-item">
 							<a class="nav-link" href="/pellets">Pellet Manager</a>
 						</li>
 						<li class="nav-item">
@@ -61,24 +75,65 @@
 						</li>
 					</ul>
 				</div>
-
 		</nav>
-		<br>
 
-        <div class="container theme-showcase" role="main">
-		{% block notify %} {% endblock %}<br>
-		{% block content %} {% endblock %}<br>
+		{% block timer_bar %}
+			{% from '_macro_timer.html' import render_timer_bar, render_timer_modal %}
+			{{ render_timer_bar() }}
+			{{ render_timer_modal() }}
+		{% endblock %}
+
+		<div class="container theme-showcase" role="main">
+
+		{% block notify %}
+			<!-- Begin Error Notification Section -->
+			{% if errors != [] %}
+				<br>
+				{% for error in errors %}
+					<div class="alert alert-danger alert-dismissible">
+						<button type="button" class="close" data-dismiss="alert">&times;</button>
+						<b><i class="fas fa-exclamation-triangle"></i>&nbsp; ERROR:</b> <i>{{ error }}</i>
+					</div>
+				{% endfor %}
+			{% endif %}
+			<!-- End Error Notification Section -->
+		{% endblock %}
+
+		{% block content %} {% endblock %}
+		<br>
 		</div>
 		{% block postcontainer %}{% endblock %}
 
-        <!-- JavaScript -->
+		{% block controlpanel %}
+			{% if settings['globals']['global_control_panel'] %}
+				<!-- Control Panel -->
+				{% from "_macro_control_panel.html" import render_container %}
+				{{ render_container(settings, control) }}
+				<!-- End Control Panel -->
+			{% endif %}
+		{% endblock %}
+
+        <!-- Standard JavaScript -->
         <!-- jQuery --> 
         <script src="{{ url_for('static', filename='js/jquery-3.4.1.js') }}"></script>
         <!-- Bootstrap -->
-        <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
         <!-- Font Awesome -->
         <script src="{{ url_for('static', filename='js/all.js') }}"></script>
-        {% block scripts %} {% endblock %}
+		
+		{% block timer_scripts %}
+		<!-- Timer JS -->
+		<script src="{{ url_for('static', filename='js/timer.js') }}"></script>
+		{% endblock %}
+
+		{% block controlpanel_scripts %}
+			{% if settings['globals']['global_control_panel'] %}
+				<!-- Control Panel JS -->
+				<script src="{{ url_for('static', filename='js/control_panel.js') }}"></script>
+			{% endif %}
+		{% endblock %}
+
+		{% block scripts %} {% endblock %}
 
     </body>
 </html>
