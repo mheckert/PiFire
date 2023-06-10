@@ -111,7 +111,7 @@ echo "**                                                                     **"
 echo "*************************************************************************"
 cd /usr/local/bin
 # Use a shallow clone to reduce download size
-$SUDO git clone --depth 1 https://github.com/nebhead/pifire
+$SUDO git clone --depth 1 --branch untested https://github.com/mheckert/pifire
 # Replace the below command to fetch development branch
 #git clone --depth 1 --branch development https://github.com/nebhead/pifire
 
