@@ -32,10 +32,10 @@ class GrillPlatform:
 		self.fan = OutputDevice(self.outpins['fan'], active_high=active_high, initial_value=False)
 		self.auger = OutputDevice(self.outpins['auger'], active_high=active_high, initial_value=False)
 		self.igniter = OutputDevice(self.outpins['igniter'], active_high=active_high, initial_value=False)
-                if( "power" in self.outpins and self.outpins['power'] is not None ):
-		self.power = OutputDevice(self.outpins['power'], active_high=active_high, initial_value=False)
-                else:
-                    self.power = None
+		if( "power" in self.outpins and self.outpins['power'] is not None ):
+			self.power = OutputDevice(self.outpins['power'], active_high=active_high, initial_value=False)
+		else:
+			self.power = None
 
 	def auger_on(self):
 		self.auger.on()
@@ -59,12 +59,12 @@ class GrillPlatform:
 		self.igniter.off()
 
 	def power_on(self):
-                if( self.power ):
-		self.power.on()
+		if( self.power ):
+			self.power.on()
 
 	def power_off(self):
-                if( self.power ):
-		self.power.off()
+		if( self.power ):
+			self.power.off()
 
 	def get_input_status(self):
 		return self.selector.value

@@ -61,8 +61,9 @@ class ReadProbes(ProbeInterface):
         ''' Read temperature from device '''
         port = self.device_info['ports'][0]
 
-        ret = get_temp()
+        ret = self.get_temp()
         if ret is None:
+            print("error reading max31855")
             return
         (tempC, tempF) = ret
 

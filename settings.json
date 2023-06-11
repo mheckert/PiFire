@@ -19,6 +19,8 @@
     "LidOpenThreshold": 15,
     "PMode": 2,
     "SmokeCycleTime": 15,
+    "StartupOnTime" : 15,
+    "StartupOffTime" : 45,
     "u_max": 1.0,
     "u_min": 0.01
   },
