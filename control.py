@@ -370,6 +370,7 @@ def _work_cycle(mode, grill_platform, probe_complex, display_device, dist_device
                         status = 'Inactive'
                 controllerCore = controller_module.Controller(settings['controller']['config'][controller_type], settings['globals']['units'], settings['cycle_data'])
                 controllerCore.set_target(control['primary_setpoint'])  # Initialize with Set Point for grill
+                eventLogger.debug( "P={} I={} D={} inter={} u={}".format( controllerCore.p, controllerCore.i,  controllerCore.d, controllerCore.inter, controllerCore.u ) )
                 eventLogger.debug('On Time = ' + str(OnTime) + ', OffTime = ' + str(OffTime) + ', CycleTime = ' + str(
                         CycleTime) + ', CycleRatio = ' + str(CycleRatio))
 
@@ -568,6 +569,7 @@ def _work_cycle(mode, grill_platform, probe_complex, display_device, dist_device
                                         OnTime = settings['cycle_data']['HoldCycleTime'] * CycleRatio
                                         OffTime = settings['cycle_data']['HoldCycleTime'] * (1 - CycleRatio)
                                         CycleTime = OnTime + OffTime
+                                        eventLogger.debug( "P={} I={} D={} inter={} u={}".format( controllerCore.p, controllerCore.i,  controllerCore.d, controllerCore.inter, controllerCore.u ) )
                                         eventLogger.debug('On Time = ' + str(OnTime) + ', OffTime = ' + str(
                                                 OffTime) + ', CycleTime = ' + str(CycleTime) + ', CycleRatio = ' + str(CycleRatio))
 
