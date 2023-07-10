@@ -15,6 +15,7 @@ Description:
  Imported Libraries
 *****************************************
 '''
+import logging
 import spidev
 import datetime
 from probes.base import ProbeInterface
@@ -37,6 +38,7 @@ class ReadProbes(ProbeInterface):
 
     def __init__(self, probe_info, device_info, units):
         super().__init__(probe_info, device_info, units)
+        self.logger = logging.getLogger("control")
 
     def _init_device(self):
         self.port = (0,0) #spidev0.0
@@ -71,6 +73,7 @@ class ReadProbes(ProbeInterface):
         result.oc_fault = 1 if (spi_data[3] & 0x01) else 0
 
         if result.fault or result.scv_fault or result.scg_fault or result.oc_fault:
+            self.logger.error( f"Probe error: fault={result.fault} scv={result.scv_fault} scg={result.scg_fault} oc={result.oc_fault}" )
             return None
 
         thermocouple_temp_c = result.thermocouple_temp * 0.25
@@ -81,7 +84,7 @@ class ReadProbes(ProbeInterface):
         if( temp_c is None ):
             now = str(datetime.datetime.now())
             now = now[0:19] # Truncate the microseconds
-            print(str(now) + ' Error Reading Temperature.')
+            self.logger.error(str(now) + ' Error Reading Temperature.')
             return None
 
         temp_f = temp_c * 9 / 5.0 + 32

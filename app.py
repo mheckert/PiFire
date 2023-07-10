@@ -1123,7 +1123,7 @@ def pellets_page(action=None):
 def garrettspage(action=None):
 	global settings
 
-	return render_template('garrett.html', page_theme=settings['globals']['page_theme'], grill_name=settings['globals']['grill_name'])
+	return render_template('garrett.html', settings=settings, control=read_control(), page_theme=settings['globals']['page_theme'], grill_name=settings['globals']['grill_name'])
 
 @app.route('/recipes', methods=['POST','GET'])
 def recipes_page(action=None):

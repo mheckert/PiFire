@@ -58,7 +58,8 @@ class Controller(ControllerBase):
 
                 self.derv = 0.0
                 self.inter = 0.0
-                self.inter_max = .02
+                self.inter_max = 5 # max out integrator windup to x degreeF-seconds
+                self.fine_tune_band = 5
 
                 self.last = 150
                 self.last_valid = False
@@ -80,7 +81,7 @@ class Controller(ControllerBase):
                 if( self.last_valid ):
                         dt = time.time() - self.last_update
                         # if self.p > 0 and self.p < 1: # Ensure we are in the pb, otherwise do not calculate i to avoid windup
-                        if( abs(self.error) > 5 ):
+                        if( abs(self.error) > self.fine_tune_band ):
                                 self.inter = 0 # Reset integrator unless within the fine-tune band
                         else:
                                 self.inter += error * dt
@@ -117,7 +118,7 @@ class Controller(ControllerBase):
 
         def set_gains(self, pb, ti, td):
                 self._calculate_gains(pb,ti,td)
-                self.inter_max = .02
+                self.inter_max = 5
 
         def get_k(self):
                 return self.kp, self.ki, self.kd

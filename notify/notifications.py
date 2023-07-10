@@ -131,6 +131,12 @@ def send_notifications(notify_event, control, settings, pelletdb, label='Probe',
 		channel = 'pifire_pellet_alerts'
 		query_args = {"value1": body_message}
 		eventLogger.info(body_message)
+	elif "Probe_Error_00" in notify_event:
+		title_message = "Probe Error!"
+		body_message = "Probe reading error" + str(now)
+		channel = 'pifire_error_alerts'
+		query_args = {"value1": 'Check thermocouples'}
+		eventLogger.info(body_message)
 	elif "Grill_Error_00" in notify_event:
 		title_message = "Grill Error!"
 		body_message = "Your grill has experienced an error and will shutdown now. " + str(now)

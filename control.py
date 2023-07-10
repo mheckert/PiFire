@@ -385,6 +385,11 @@ def _work_cycle(mode, grill_platform, probe_complex, display_device, dist_device
 
         # Get initial probe sensor data, temperatures
         sensor_data = probe_complex.read_probes()
+        if( sensor_data is None ):
+            controlLogger.exception(f'Error: bad initial probe reading')
+            status = 'Inactive'
+            return ()
+
         ptemp = list(sensor_data['primary'].values())[0]  # Primary Temperature or the Pit Temperature
 
         # Safety Controls
@@ -593,6 +598,9 @@ def _work_cycle(mode, grill_platform, probe_complex, display_device, dist_device
 
                 # Get temperatures from all probes
                 sensor_data = probe_complex.read_probes()
+                if( sensor_data is None ):
+                    send_notifications("Probe_Error_00", control, settings, pelletdb)
+                    continue
                 ptemp = list(sensor_data['primary'].values())[0]  # Primary Temperature or the Pit Temperature
 
                 in_data = {}

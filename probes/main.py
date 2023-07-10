@@ -68,6 +68,9 @@ class ProbesMain:
 		}
 		for device in self.probe_device_list:
 			device_data = device.read_all_ports(output_data)
+			if device_data is None:
+				self.logger.error("error reading temperature")
+				return None
 			for group in device_data:
 				for probe in device_data[group]:
 					output_data[group][probe] = device_data[group][probe]
